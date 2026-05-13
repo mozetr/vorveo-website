@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Vorveo - Premium DVB Receivers & Set-Top Boxes</title>
-    <!-- 中英文双语，默认英文；包含免费报价表单 (Formspree第三方邮件服务) -->
+    <!-- 中英文双语，默认英文；包含免费报价表单 (EmailJS 邮件服务) -->
     <style>
         * {
             margin: 0;
@@ -459,6 +459,8 @@
         }
         [data-translate] { transition: opacity 0.1s; }
     </style>
+    <!-- 引入 EmailJS 库 -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -485,16 +487,15 @@
     <div class="modal-content">
         <span class="close-modal">&times;</span>
         <h3 data-translate="formTitle" style="margin-bottom: 20px;">Request a Free Quote</h3>
-        <form id="quoteForm" action="https://formspree.io/f/xnjwoapa" method="POST">
-            <!-- 注意：上面的action是演示占位符。实际需要用户注册 Formspree 并获得专属端点后替换。我们会添加说明。
-                 为确保功能，用户必须替换成自己的 Formspree 端点才能收到邮件。默认使用一个测试端点可能无效，但用户需按指南替换为 info@vorveo.com 对应的表单ID -->
+        <!-- 移除 Formspree action，保留表单结构 -->
+        <form id="quoteForm">
             <div class="form-group">
                 <label data-translate="nameLabel">Full Name *</label>
-                <input type="text" name="name" required placeholder="John Doe">
+                <input type="text" name="user_name" required placeholder="John Doe">
             </div>
             <div class="form-group">
                 <label data-translate="emailLabel">Email *</label>
-                <input type="email" name="email" required placeholder="contact@example.com">
+                <input type="email" name="user_email" required placeholder="contact@example.com">
             </div>
             <div class="form-group">
                 <label data-translate="companyLabel">Company</label>
@@ -504,8 +505,6 @@
                 <label data-translate="messageLabel">Message / Inquiry *</label>
                 <textarea name="message" rows="4" required placeholder="Tell us about your requirements..."></textarea>
             </div>
-            <input type="hidden" name="_subject" value="New Quote Request from Vorveo Website">
-            <input type="hidden" name="_replyto" value="info@vorveo.com">
             <button type="submit" class="submit-btn" data-translate="submitBtn">Send Message</button>
             <div id="formStatus" class="form-status"></div>
         </form>
@@ -678,7 +677,7 @@
         });
     }
     
-    // 模态框逻辑 + Formspree 提交提示
+    // 模态框逻辑
     const modal = document.getElementById('quoteModal');
     const openBtn = document.getElementById('quoteModalBtn');
     const closeSpan = document.querySelector('.close-modal');
@@ -686,27 +685,42 @@
     closeSpan.onclick = () => { modal.style.display = 'none'; };
     window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
     
+    // 初始化 EmailJS
+    emailjs.init('Fuf4_rjkmoRIAXI1J');
     const form = document.getElementById('quoteForm');
     const formStatus = document.getElementById('formStatus');
-    // 注意：使用的Formspree端点需要替换为实际注册后指向 info@vorveo.com 的ID。目前是占位端点为示例，用户需按部署指南自行更换。
-    // 为了便于测试，已在代码中留出替换提醒，用户需要到 formspree.io 注册并创建表单，将 action 链接替换。
+    
+    // EmailJS 表单提交逻辑
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         formStatus.innerHTML = '<span style="color:#2563eb;">Sending...</span>';
+        
         try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                body: new FormData(form),
-                headers: { 'Accept': 'application/json' }
-            });
-            if (response.ok) {
+            // 发送邮件
+            const response = await emailjs.send(
+                'service_nx0wnew',
+                'template_umxxtqg',
+                {
+                    user_name: form.user_name.value,
+                    user_email: form.user_email.value,
+                    company: form.company.value,
+                    message: form.message.value,
+                    reply_to: 'info@vorveo.com' // 回复邮箱
+                }
+            );
+            
+            if (response.status === 200) {
                 formStatus.innerHTML = '<span style="color:#16a34a;">✓ Message sent successfully! We will reply soon.</span>';
                 form.reset();
-                setTimeout(() => { modal.style.display = 'none'; formStatus.innerHTML = ''; }, 2500);
+                setTimeout(() => { 
+                    modal.style.display = 'none'; 
+                    formStatus.innerHTML = ''; 
+                }, 2500);
             } else {
-                throw new Error('Failed');
+                throw new Error('Failed to send message');
             }
         } catch (err) {
+            console.error('EmailJS Error:', err);
             formStatus.innerHTML = '<span style="color:#dc2626;">Error, please try again or email info@vorveo.com directly.</span>';
         }
     });
