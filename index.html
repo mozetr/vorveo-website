@@ -3,9 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0B2B3F">
+    <meta name="description" content="Vorveo - Professional DVB Receiver Manufacturer with 11 years of expertise. Premium DVB-T2/S2/C set-top boxes for global markets.">
     <title>Vorveo | Premium DVB Receivers & STBs</title>
-    <!-- EmailJS Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <!-- DNS 预解析 & 预连接 Google Fonts -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- 异步加载字体，display=swap 避免 FOIT（不可见文本闪烁） -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap"></noscript>
+
     <style>
         * {
             margin: 0;
@@ -19,10 +31,10 @@
             color: #111827;
             line-height: 1.5;
             scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeSpeed;
         }
-
-        /* 导入字体 */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap');
 
         .container {
             max-width: 1280px;
@@ -30,14 +42,18 @@
             padding: 0 32px;
         }
 
-        /* 玻璃态导航 */
+        /* 玻璃态导航 - GPU 加速 + contain 隔离 */
         header {
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(255,255,255,0.92);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transform: translateZ(0);
+            will-change: backdrop-filter;
+            contain: layout style paint;
         }
 
         .navbar {
@@ -76,7 +92,7 @@
             text-decoration: none;
             font-weight: 500;
             color: #1f2937;
-            transition: 0.2s;
+            transition: color 0.2s ease;
         }
 
         .nav-links a:hover {
@@ -91,7 +107,11 @@
             font-weight: 600;
             font-size: 0.75rem;
             cursor: pointer;
-            transition: 0.2s;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            white-space: nowrap;
+        }
+        .lang-switch:hover {
+            background: #dde4ff;
         }
 
         .btn-primary {
@@ -102,17 +122,18 @@
             font-weight: 600;
             border: none;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
             text-decoration: none;
             display: inline-block;
             font-size: 0.9rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            white-space: nowrap;
         }
 
         .btn-primary:hover {
             background: #1C6E8F;
             transform: translateY(-2px);
-            box-shadow: 0 12px 20px -12px rgba(28,110,143,0.4);
+            box-shadow: 0 12px 20px -12px rgba(28, 110, 143, 0.4);
         }
 
         .btn-outline {
@@ -122,7 +143,9 @@
             padding: 8px 28px;
             border-radius: 40px;
             font-weight: 600;
-            transition: 0.2s;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+            white-space: nowrap;
         }
 
         .btn-outline:hover {
@@ -131,12 +154,13 @@
             transform: translateY(-2px);
         }
 
-        /* Hero 区域 - 双栏 + 抽象图形 */
+        /* Hero 区域 */
         .hero {
             background: linear-gradient(135deg, #F0F5FA 0%, #E8F0F6 100%);
             padding: 80px 0;
             position: relative;
             overflow: hidden;
+            contain: layout style paint;
         }
         .hero:before {
             content: '';
@@ -145,9 +169,10 @@
             right: -10%;
             width: 400px;
             height: 400px;
-            background: radial-gradient(circle, rgba(28,110,143,0.12) 0%, rgba(255,255,255,0) 70%);
+            background: radial-gradient(circle, rgba(28, 110, 143, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
             border-radius: 50%;
             pointer-events: none;
+            will-change: transform;
         }
         .hero-grid {
             display: flex;
@@ -159,6 +184,7 @@
         }
         .hero-text {
             flex: 1.2;
+            min-width: 280px;
         }
         .hero-text h2 {
             font-size: 3.3rem;
@@ -176,6 +202,7 @@
             display: flex;
             gap: 36px;
             margin: 30px 0 36px;
+            flex-wrap: wrap;
         }
         .stat .number {
             font-size: 2.2rem;
@@ -186,11 +213,14 @@
             flex: 0.9;
             display: flex;
             justify-content: center;
+            min-width: 200px;
         }
         .hero-image img {
             width: 100%;
             max-width: 380px;
-            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));
+            height: auto;
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.1));
+            aspect-ratio: 340 / 240;
         }
         .trust-row {
             display: flex;
@@ -205,8 +235,9 @@
             border-radius: 60px;
             font-size: 0.8rem;
             font-weight: 500;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             border: 1px solid #e2e8f0;
+            white-space: nowrap;
         }
 
         /* 通用标题 */
@@ -225,7 +256,7 @@
             font-size: 1.1rem;
         }
 
-        /* 产品网格 - 现代卡片 */
+        /* 产品网格 - 使用 contain 隔离渲染 */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -235,14 +266,17 @@
         .product-card {
             background: white;
             border-radius: 32px;
-            transition: all 0.3s cubic-bezier(0.2,0,0,1);
+            transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1), border-color 0.3s ease;
             border: 1px solid #edf2f7;
-            box-shadow: 0 6px 12px -6px rgba(0,0,0,0.05);
+            box-shadow: 0 6px 12px -6px rgba(0, 0, 0, 0.05);
             overflow: hidden;
+            contain: layout style paint;
+            will-change: transform;
+            transform: translateZ(0);
         }
         .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 24px 36px -12px rgba(0,0,0,0.12);
+            transform: translateY(-8px) translateZ(0);
+            box-shadow: 0 24px 36px -12px rgba(0, 0, 0, 0.12);
             border-color: #cbd5e1;
         }
         .product-img {
@@ -250,10 +284,17 @@
             padding: 32px 20px;
             text-align: center;
             border-bottom: 1px solid #ecf3fa;
+            min-height: 190px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .product-img img {
-            max-height: 150px;
+            max-height: 130px;
+            width: auto;
+            height: auto;
             object-fit: contain;
+            aspect-ratio: auto;
         }
         .product-info {
             padding: 24px 22px 28px;
@@ -275,6 +316,7 @@
             font-weight: 700;
             padding: 4px 12px;
             border-radius: 30px;
+            white-space: nowrap;
         }
         .specs {
             display: flex;
@@ -282,6 +324,7 @@
             gap: 8px;
             margin: 16px 0;
             list-style: none;
+            padding: 0;
         }
         .specs li {
             background: #f1f5f9;
@@ -289,6 +332,7 @@
             border-radius: 30px;
             font-size: 0.7rem;
             font-weight: 500;
+            white-space: nowrap;
         }
         .interface {
             display: flex;
@@ -302,12 +346,15 @@
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.7rem;
+            white-space: nowrap;
         }
         .card-footer {
             margin-top: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .quote-trigger {
             background: none;
@@ -319,6 +366,11 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            transition: color 0.2s ease;
+            white-space: nowrap;
+        }
+        .quote-trigger:hover {
+            color: #0B2B3F;
         }
 
         /* 优势区域 */
@@ -327,10 +379,11 @@
             border-radius: 64px;
             padding: 64px 48px;
             margin: 40px auto 80px;
+            contain: layout style paint;
         }
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 48px;
             text-align: center;
         }
@@ -350,7 +403,8 @@
             padding: 56px 48px;
             margin: 32px auto 60px;
             border: 1px solid #eef2ff;
-            box-shadow: 0 12px 24px -12px rgba(0,0,0,0.04);
+            box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.04);
+            contain: layout style paint;
         }
         .about-flex {
             display: flex;
@@ -360,6 +414,7 @@
         }
         .about-text {
             flex: 2;
+            min-width: 280px;
         }
         .about-text h3 {
             font-size: 2rem;
@@ -377,6 +432,7 @@
             border-radius: 40px;
             font-weight: 500;
             font-size: 0.8rem;
+            white-space: nowrap;
         }
         .factory-card {
             flex: 1;
@@ -384,16 +440,21 @@
             border-radius: 32px;
             padding: 32px 24px;
             text-align: center;
+            min-width: 200px;
+            contain: layout style paint;
         }
 
-        /* 模态框 */
+        /* 模态框 - GPU 加速动画 */
         .modal {
             display: none;
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -406,6 +467,8 @@
             padding: 40px;
             position: relative;
             animation: fadeUp 0.25s ease;
+            will-change: transform, opacity;
+            contain: layout style paint;
         }
         .close-modal {
             position: absolute;
@@ -414,6 +477,11 @@
             font-size: 28px;
             cursor: pointer;
             color: #94a3b8;
+            transition: color 0.15s ease;
+            line-height: 1;
+        }
+        .close-modal:hover {
+            color: #0f172a;
         }
         .form-group {
             margin-bottom: 20px;
@@ -423,12 +491,21 @@
             display: block;
             margin-bottom: 6px;
         }
-        .form-group input, .form-group textarea {
+        .form-group input,
+        .form-group textarea {
             width: 100%;
             padding: 12px 18px;
             border-radius: 32px;
             border: 1px solid #cbd5e1;
             font-family: inherit;
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1C6E8F;
+            box-shadow: 0 0 0 3px rgba(28, 110, 143, 0.1);
         }
         .submit-btn {
             background: #0B2B3F;
@@ -439,12 +516,30 @@
             font-weight: bold;
             border: none;
             cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s ease, transform 0.15s ease;
+        }
+        .submit-btn:hover {
+            background: #1C6E8F;
+            transform: translateY(-1px);
+        }
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px);}
-            to { opacity: 1; transform: translateY(0);}
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
+        /* Footer */
         footer {
             background: #0f172a;
             color: #cbd5e1;
@@ -458,13 +553,19 @@
             flex-wrap: wrap;
             gap: 40px;
         }
+        .footer-grid h4 {
+            margin-bottom: 8px;
+            color: #f1f5f9;
+        }
         .copyright {
             text-align: center;
             padding-top: 32px;
             margin-top: 32px;
             border-top: 1px solid #1e293b;
+            font-size: 0.85rem;
         }
 
+        /* 响应式 */
         @media (max-width: 780px) {
             .container {
                 padding: 0 20px;
@@ -483,295 +584,516 @@
             .section-title {
                 font-size: 1.9rem;
             }
-            .features-section, .about-wrapper {
+            .features-section,
+            .about-wrapper {
                 padding: 32px 24px;
+                border-radius: 40px;
+            }
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                gap: 24px;
+            }
+            .hero {
+                padding: 50px 0;
+            }
+            .hero-grid {
+                gap: 32px;
+            }
+            /* 移动端降低 backdrop-filter 强度以提升性能 */
+            header {
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
             }
         }
         @media (max-width: 480px) {
             .hero-stats {
                 gap: 20px;
             }
+            .hero-text h2 {
+                font-size: 1.8rem;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+            .modal-content {
+                padding: 28px 20px;
+                border-radius: 32px;
+            }
+            .product-card {
+                border-radius: 24px;
+            }
+            .product-img {
+                min-height: 150px;
+                padding: 24px 16px;
+            }
+            .product-img img {
+                max-height: 110px;
+            }
+            .btn-primary,
+            .btn-outline {
+                padding: 8px 20px;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="navbar container">
-        <div class="logo">
-            <h1>VORVEO</h1>
-            <p data-translate="subBrand">沃维欧 · 智享视界</p>
-        </div>
-        <div class="nav-links">
-            <a href="#products" data-translate="navProducts">Products</a>
-            <a href="#features" data-translate="navWhy">Why Vorveo</a>
-            <a href="#about" data-translate="navAbout">About</a>
-            <button id="quoteModalBtn" class="btn-primary" data-translate="quoteBtn">Get a Free Quote</button>
-            <button id="langToggle" class="lang-switch">中文</button>
-        </div>
-    </div>
-</header>
-
-<!-- 报价弹窗 -->
-<div id="quoteModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <h3 style="margin-bottom: 20px;" data-translate="formTitle">Request a Free Quote</h3>
-        <form id="quoteForm">
-            <div class="form-group"><label data-translate="nameLabel">Full Name *</label><input type="text" name="user_name" required></div>
-            <div class="form-group"><label data-translate="emailLabel">Email *</label><input type="email" name="user_email" required></div>
-            <div class="form-group"><label data-translate="companyLabel">Company</label><input type="text" name="company"></div>
-            <div class="form-group"><label data-translate="messageLabel">Message / Inquiry *</label><textarea name="message" rows="4" required></textarea></div>
-            <button type="submit" class="submit-btn" data-translate="submitBtn">Send Message</button>
-            <div id="formStatus" class="form-status" style="text-align:center; margin-top:16px;"></div>
-        </form>
-    </div>
-</div>
-
-<!-- Hero 区域 -->
-<section class="hero">
-    <div class="container hero-grid">
-        <div class="hero-text">
-            <h2 data-translate="heroTitle">Crystal Clear World<br>From Vorveo</h2>
-            <p data-translate="heroDesc">Professional DVB Receiver Manufacturer | 11 Years of Expertise | Serving 40+ Countries</p>
-            <div class="hero-stats">
-                <div class="stat"><span class="number">6M+</span><br><span data-translate="statAnnual">Annual Capacity</span></div>
-                <div class="stat"><span class="number">10+</span><br><span data-translate="statPatents">R&D Patents</span></div>
-                <div class="stat"><span class="number">ISO</span><br><span data-translate="statCert">Certified</span></div>
+    <header>
+        <div class="navbar container">
+            <div class="logo">
+                <h1>VORVEO</h1>
+                <p data-translate="subBrand">沃维欧 · 智享视界</p>
             </div>
-            <div>
-                <a href="#products" class="btn-primary" style="margin-right: 16px;" data-translate="heroBtnExplore">Explore Products</a>
-                <button id="heroQuoteBtn" class="btn-outline" data-translate="heroBtnStrength">Request Quote</button>
+            <div class="nav-links">
+                <a href="#products" data-translate="navProducts">Products</a>
+                <a href="#features" data-translate="navWhy">Why Vorveo</a>
+                <a href="#about" data-translate="navAbout">About</a>
+                <button id="quoteModalBtn" class="btn-primary" data-translate="quoteBtn">Get a Free Quote</button>
+                <button id="langToggle" class="lang-switch">中文</button>
             </div>
         </div>
-        <div class="hero-image">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 340 240'%3E%3Crect width='340' height='240' fill='%231b4a6e' rx='28'/%3E%3Ctext x='60' y='130' fill='white' font-size='28' font-weight='bold'%3EVorveo 4K%3C/text%3E%3Ctext x='70' y='170' fill='%23cbd5e1' font-size='14'%3EDVB-T2/S2/C%3C/text%3E%3C/svg%3E" alt="Vorveo Hero">
+    </header>
+
+    <!-- 报价弹窗 -->
+    <div id="quoteModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-content">
+            <span class="close-modal" aria-label="Close modal">&times;</span>
+            <h3 id="modalTitle" style="margin-bottom: 20px;" data-translate="formTitle">Request a Free Quote</h3>
+            <form id="quoteForm" novalidate>
+                <div class="form-group"><label data-translate="nameLabel">Full Name *</label><input type="text" name="user_name" required autocomplete="name"></div>
+                <div class="form-group"><label data-translate="emailLabel">Email *</label><input type="email" name="user_email" required autocomplete="email"></div>
+                <div class="form-group"><label data-translate="companyLabel">Company</label><input type="text" name="company" autocomplete="organization"></div>
+                <div class="form-group"><label data-translate="messageLabel">Message / Inquiry *</label><textarea name="message" rows="4" required></textarea></div>
+                <button type="submit" class="submit-btn" data-translate="submitBtn">Send Message</button>
+                <div id="formStatus" class="form-status" style="text-align:center; margin-top:16px; min-height:24px;"></div>
+            </form>
         </div>
     </div>
-    <div class="container trust-row">
-        <span class="trust-badge">✅ ISO9001:2025</span>
-        <span class="trust-badge">📜 CE / RoHS</span>
-        <span class="trust-badge">🏭 5 SMT Lines</span>
-        <span class="trust-badge">🌍 40+ Countries</span>
-    </div>
-</section>
 
-<!-- 产品展示区 -->
-<div class="container" id="products">
-    <div class="section-title" data-translate="productsTitle">📺 Bestselling Set-Top Box Series</div>
-    <div class="section-subtitle" data-translate="productsSub">Compact & Full Connectivity · Reliable Signal Reception for Home/Hotel/Commercial</div>
-    <div class="products-grid" id="product-list"></div>
-</div>
-
-<!-- 特色优势 -->
-<div class="container" id="features">
-    <div class="features-section">
-        <div class="section-title" style="margin-top:0;" data-translate="whyTitle">Why Vorveo</div>
-        <div class="features-grid">
-            <div class="feature-item"><div class="feature-icon">🏭</div><h4 data-translate="why1Title">Own Factory</h4><p data-translate="why1Desc">5 SMT lines, 10 assembly lines, daily 20k+ units</p></div>
-            <div class="feature-item"><div class="feature-icon">🛡️</div><h4 data-translate="why2Title">Strict QC</h4><p data-translate="why2Desc">Aging test & RF calibration on every unit</p></div>
-            <div class="feature-item"><div class="feature-icon">📦</div><h4 data-translate="why3Title">OEM/ODM Expert</h4><p data-translate="why3Desc">Firmware customization, logo, packaging</p></div>
-            <div class="feature-item"><div class="feature-icon">🌎</div><h4 data-translate="why4Title">Global Support</h4><p data-translate="why4Desc">Warehouses in EU/SEA, fast shipping</p></div>
-        </div>
-    </div>
-</div>
-
-<!-- 关于我们 -->
-<div class="container" id="about">
-    <div class="about-wrapper">
-        <div class="about-flex">
-            <div class="about-text">
-                <h3 data-translate="aboutTitle">About Vorveo</h3>
-                <p data-translate="aboutP1">Vorveo (Shenzhen) Technology Co., Ltd., rooted in advanced digital AV expertise since 2013, specializes in DVB-T2/S2/C, Android STBs, and high-definition receivers. We operate 5 high-speed SMT lines, 10 automated assembly lines, and hold ISO9001 & ISO14001 certifications, with an annual capacity exceeding 6 million units.</p>
-                <p data-translate="aboutP2">Our products are exported to Europe, Southeast Asia, South America, and Africa, providing OEM/ODM solutions for global operators. Every Vorveo set-top box undergoes rigorous RF and aging tests, delivering exceptional performance even in complex signal environments.</p>
-                <div class="cert-list">
-                    <span class="cert-item">✔ ISO9001:2025</span>
-                    <span class="cert-item">✔ CE / RoHS</span>
-                    <span class="cert-item">✔ Patent Certifications</span>
+    <!-- Hero 区域 -->
+    <section class="hero">
+        <div class="container hero-grid">
+            <div class="hero-text">
+                <h2 data-translate="heroTitle">Crystal Clear World<br>From Vorveo</h2>
+                <p data-translate="heroDesc">Professional DVB Receiver Manufacturer | 11 Years of Expertise | Serving 40+ Countries</p>
+                <div class="hero-stats">
+                    <div class="stat"><span class="number">6M+</span><br><span data-translate="statAnnual">Annual Capacity</span></div>
+                    <div class="stat"><span class="number">10+</span><br><span data-translate="statPatents">R&D Patents</span></div>
+                    <div class="stat"><span class="number">ISO</span><br><span data-translate="statCert">Certified</span></div>
+                </div>
+                <div>
+                    <a href="#products" class="btn-primary" style="margin-right: 16px;" data-translate="heroBtnExplore">Explore Products</a>
+                    <button id="heroQuoteBtn" class="btn-outline" data-translate="heroBtnStrength">Request Quote</button>
                 </div>
             </div>
-            <div class="factory-card">
-                <div style="font-size: 48px;">🏭</div>
-                <p><strong data-translate="factoryTitle">Shenzhen Smart Base</strong><br><span data-translate="factoryDesc">Fully automated lines & dust-free workshops</span></p>
-                <div style="margin-top: 12px; font-weight: 500;" data-translate="factoryCapacity">Daily capacity 20,000+ units</div>
+            <div class="hero-image">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 340 240' width='340' height='240'%3E%3Crect width='340' height='240' fill='%231b4a6e' rx='28'/%3E%3Ctext x='60' y='130' fill='white' font-size='28' font-weight='bold'%3EVorveo 4K%3C/text%3E%3Ctext x='70' y='170' fill='%23cbd5e1' font-size='14'%3EDVB-T2/S2/C%3C/text%3E%3C/svg%3E"
+                alt="Vorveo 4K DVB Receiver" width="340" height="240">
+            </div>
+        </div>
+        <div class="container trust-row">
+            <span class="trust-badge">✅ ISO9001:2025</span>
+            <span class="trust-badge">📜 CE / RoHS</span>
+            <span class="trust-badge">🏭 5 SMT Lines</span>
+            <span class="trust-badge">🌍 40+ Countries</span>
+        </div>
+    </section>
+
+    <!-- 产品展示区 -->
+    <div class="container" id="products">
+        <div class="section-title" data-translate="productsTitle">📺 Bestselling Set-Top Box Series</div>
+        <div class="section-subtitle" data-translate="productsSub">Compact & Full Connectivity · Reliable Signal Reception for Home/Hotel/Commercial</div>
+        <div class="products-grid" id="product-list"></div>
+    </div>
+
+    <!-- 特色优势 -->
+    <div class="container" id="features">
+        <div class="features-section">
+            <div class="section-title" style="margin-top:0;" data-translate="whyTitle">Why Vorveo</div>
+            <div class="features-grid">
+                <div class="feature-item"><div class="feature-icon">🏭</div><h4 data-translate="why1Title">Own Factory</h4><p data-translate="why1Desc">5 SMT lines, 10 assembly lines, daily 20k+ units</p></div>
+                <div class="feature-item"><div class="feature-icon">🛡️</div><h4 data-translate="why2Title">Strict QC</h4><p data-translate="why2Desc">Aging test & RF calibration on every unit</p></div>
+                <div class="feature-item"><div class="feature-icon">📦</div><h4 data-translate="why3Title">OEM/ODM Expert</h4><p data-translate="why3Desc">Firmware customization, logo, packaging</p></div>
+                <div class="feature-item"><div class="feature-icon">🌎</div><h4 data-translate="why4Title">Global Support</h4><p data-translate="why4Desc">Warehouses in EU/SEA, fast shipping</p></div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- 联系信息 -->
-<div class="container" style="text-align: center; margin: 40px auto 60px;">
-    <h3 style="margin-bottom: 12px;" data-translate="contactTitle">Global Sales Network</h3>
-    <p style="margin-bottom: 24px;" data-translate="contactInfo">vorveo.com | info@vorveo.com</p>
-    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-        <span class="trust-badge" data-translate="badge2">📦 OEM/ODM Ready</span>
-        <span class="trust-badge" data-translate="badge3">📄 SDK/APP Support</span>
-    </div>
-</div>
-
-<footer>
-    <div class="container footer-grid">
-        <div><h4 data-translate="footerBrand">Vorveo Technology</h4><p data-translate="footerSlogan">Making digital TV experience simple</p><p>© 2025 Vorveo.com</p></div>
-        <div><h4 data-translate="footerQuick">Quick Links</h4><a href="#products" style="color:#94a3b8; text-decoration:none;" data-translate="footerProducts">Products</a><br><a href="#about" style="color:#94a3b8; text-decoration:none;" data-translate="footerAbout">About Us</a></div>
-        <div><h4 data-translate="footerLegal">Compliance</h4><p data-translate="footerCertText">All products meet international EMC & safety standards</p></div>
-    </div>
-    <div class="copyright" data-translate="copyright">vorveo.com — Vorveo Smart Terminals | Designed for performance</div>
-</footer>
-
-<script>
-    // 产品数据 (同原有)
-    const productsData = [
-        { model: "DVB-mini06", img: "img/mini06.webp", tagKey: "tagClassic", specsEn: ["DVB-T2/S2","H.265","Full Scan"], specsZh: ["DVB-T2/S2","H.265硬解","全频段扫描"], ports: ["RF IN","DC-5V","USB","AV","HDMI"], featEn: "90x60x25mm ultra-compact", featZh: "90x60x25mm 超迷你机身" },
-        { model: "HD-mini30", img: "img/HD-mini30.webp", tagKey: "tagHD", specsEn: ["HDMI+HD OUT","4K Upscale","Low Power"], specsZh: ["HDMI+HD OUT","4K升频","低功耗"], ports: ["RF IN","DC-5V","USB","AV","HD OUT"], featEn: "Dedicated HD output", featZh: "独立HD输出接口" },
-        { model: "HD-mini31", img: "img/HD-mini31.webp", tagKey: "tagDual", specsEn: ["Dual Tuner","Low Threshold","EPG"], specsZh: ["双Tuner接收","超低门限","EPG节目指南"], ports: ["RF IN*2","USB","HDMI","AV","DC 5V"], featEn: "Signal boost design", featZh: "信号增强设计" },
-        { model: "DVB-mini01", img: "img/mini01.webp", tagKey: "tagEssential", specsEn: ["MPEG-2/4","Multi-Language","Auto Scan"], specsZh: ["MPEG-2/4","多国语言","自动搜索"], ports: ["RF IN","DC-5V","USB","AV","HDMI"], featEn: "Best value entry", featZh: "入门性价比之王" },
-        { model: "DVB-mini02", img: "img/mini02.webp", tagKey: "tagUSB", specsEn: ["Multimedia Playback","PVR Ready","PAL/NTSC"], specsZh: ["多媒体播放","录像功能","PAL/NTSC"], ports: ["RF IN","USB","AV","HDMI","DC-5V"], featEn: "Supports DVB recording", featZh: "支持录制DVB节目" },
-        { model: "DVB-mini03", img: "img/mini03.webp", tagKey: "tagEco", specsEn: ["5V Low Power","Fast Boot","FTA"], specsZh: ["5V低功耗","快速启动","FTA接收"], ports: ["RF IN","USB","AV","HDMI","DC-5V"], featEn: "Standby <0.5W", featZh: "绿色环保待机<0.5W" },
-        { model: "DVB-mini04", img: "img/mini04.webp", tagKey: "tagCooling", specsEn: ["Metal Shielding","Anti-Interference","1080P"], specsZh: ["全金属屏蔽","抗干扰","1080P输出"], ports: ["RF IN","USB","AV","HDMI"], featEn: "Aluminum alloy case", featZh: "全铝合金机身" },
-        { model: "DVB-mini05", img: "img/mini05.webp", tagKey: "tagHotel", specsEn: ["RS232(Opt)","Cloning","Welcome Msg"], specsZh: ["RS232串口(可选)","克隆功能","欢迎信息"], ports: ["RF IN","USB","AV","HDMI","DC-5V"], featEn: "Hotel mode ready", featZh: "支持酒店工程模式" }
-    ];
-
-    const translations = {
-        en: {
-            subBrand: "Vorveo · Smart Vision", navProducts: "Products", navWhy: "Why Vorveo", navAbout: "About", quoteBtn: "Get a Free Quote",
-            heroTitle: "Crystal Clear World<br>From Vorveo", heroDesc: "Professional DVB Receiver Manufacturer | 11 Years of Expertise | Serving 40+ Countries",
-            statAnnual: "Annual Capacity", statPatents: "R&D Patents", statCert: "Certified",
-            heroBtnExplore: "Explore Products", heroBtnStrength: "Request Quote",
-            productsTitle: "📺 Bestselling Set-Top Box Series", productsSub: "Compact & Full Connectivity · Reliable Signal Reception",
-            whyTitle: "Why Vorveo", why1Title: "Own Factory", why1Desc: "5 SMT lines, 10 assembly lines, daily 20k+ units", why2Title: "Strict QC", why2Desc: "Aging test & RF calibration on every unit", why3Title: "OEM/ODM Expert", why3Desc: "Firmware customization, logo, packaging", why4Title: "Global Support", why4Desc: "Warehouses in EU/SEA, fast shipping",
-            aboutTitle: "About Vorveo", aboutP1: "Vorveo (Shenzhen) Technology Co., Ltd., rooted in advanced digital AV expertise since 2013, specializes in DVB-T2/S2/C, Android STBs, and high-definition receivers. We operate 5 high-speed SMT lines, 10 automated assembly lines, and hold ISO9001 & ISO14001 certifications, with an annual capacity exceeding 6 million units.", aboutP2: "Our products are exported to Europe, Southeast Asia, South America, and Africa, providing OEM/ODM solutions for global operators. Every Vorveo set-top box undergoes rigorous RF and aging tests, delivering exceptional performance even in complex signal environments.",
-            factoryTitle: "Shenzhen Smart Base", factoryDesc: "Fully automated lines & dust-free workshops", factoryCapacity: "Daily capacity 20,000+ units",
-            contactTitle: "Global Sales Network", contactInfo: "vorveo.com | info@vorveo.com",
-            badge2: "📦 OEM/ODM Ready", badge3: "📄 SDK/APP Support",
-            footerBrand: "Vorveo Technology", footerSlogan: "Making digital TV experience simple", footerQuick: "Quick Links", footerAbout: "About Us", footerLegal: "Compliance", footerCertText: "All products meet international EMC & safety standards", copyright: "vorveo.com — Vorveo Smart Terminals",
-            formTitle: "Request a Free Quote", nameLabel: "Full Name *", emailLabel: "Email *", companyLabel: "Company", messageLabel: "Message / Inquiry *", submitBtn: "Send Message",
-            tags: { tagClassic: "Classic", tagHD: "HD Output", tagDual: "Dual Tuner", tagEssential: "Essential", tagUSB: "PVR Ready", tagEco: "Eco", tagCooling: "Alloy", tagHotel: "Hotel" }
-        },
-        zh: {
-            subBrand: "沃维欧 · 智享视界", navProducts: "产品中心", navWhy: "优势", navAbout: "关于我们", quoteBtn: "获取免费报价",
-            heroTitle: "高清视界<br>源自沃维欧", heroDesc: "专业 DVB 机顶盒制造商 | 11年技术沉淀 | 服务全球40+国家",
-            statAnnual: "年产能", statPatents: "研发专利", statCert: "国际认证",
-            heroBtnExplore: "探索产品", heroBtnStrength: "立即询价",
-            productsTitle: "📺 热销机顶盒系列", productsSub: "精致小巧 · 全接口支持 · 稳定信号接收，适合酒店/家庭/商业应用",
-            whyTitle: "为什么选择沃维欧", why1Title: "自有工厂", why1Desc: "5条SMT线，10条组装线，日产2万台", why2Title: "严苛质检", why2Desc: "每台设备老化测试与射频校准", why3Title: "OEM/ODM专家", why3Desc: "固件定制、LOGO、包装", why4Title: "全球支持", why4Desc: "欧/东南亚仓库，快速发货",
-            aboutTitle: "关于沃维欧 · Vorveo", aboutP1: "沃维欧（Vorveo）源于深圳，依托母公司近十余年数字视听技术积累，专注于DVB-T2/S2/C、Android智能机顶盒及高清接收设备的研发与制造。我们拥有5条高速SMT生产线、10条自动化组装线，通过ISO9001及ISO14001体系认证，年产能力超600万台。", aboutP2: "产品远销欧洲、东南亚、南美及非洲，为全球运营商及品牌客户提供OEM/ODM解决方案。每一台Vorveo机顶盒都经过严格射频测试与老化实验，确保在复杂信号环境下依然拥有卓越性能。",
-            factoryTitle: "深圳智能制造基地", factoryDesc: "全自动化产线 & 百万级无尘车间", factoryCapacity: "日均产能 20,000+ 台",
-            contactTitle: "全球销售网络", contactInfo: "vorveo.com | info@vorveo.com",
-            badge2: "📦 支持OEM定制", badge3: "📄 提供SDK/APP开发",
-            footerBrand: "沃维欧科技", footerSlogan: "让数字电视体验更简单", footerQuick: "快速链接", footerAbout: "企业介绍", footerLegal: "合规声明", footerCertText: "本网站产品均已通过国际EMC与安全认证", copyright: "vorveo.com — 沃维欧智慧终端",
-            formTitle: "免费获取报价", nameLabel: "全名 *", emailLabel: "电子邮箱 *", companyLabel: "公司名称", messageLabel: "留言/询盘内容 *", submitBtn: "发送询盘",
-            tags: { tagClassic: "经典畅销", tagHD: "升级HD输出", tagDual: "双天线版", tagEssential: "基础全能", tagUSB: "USB多媒体", tagEco: "节能设计", tagCooling: "强化散热", tagHotel: "酒店定制" }
-        }
-    };
-
-    let currentLang = 'en';
-    function updateLanguage(lang) {
-        currentLang = lang;
-        const t = translations[lang];
-        document.querySelectorAll('[data-translate]').forEach(el => {
-            const key = el.getAttribute('data-translate');
-            if (t[key]) el.innerHTML = t[key];
-        });
-        renderProducts(lang);
-        document.getElementById('langToggle').innerText = lang === 'en' ? '中文' : 'English';
-    }
-
-    function renderProducts(lang) {
-        const grid = document.getElementById('product-list');
-        if (!grid) return;
-        const t = translations[lang];
-        const tagMap = t.tags;
-        grid.innerHTML = '';
-        productsData.forEach(p => {
-            const tagText = tagMap[p.tagKey];
-            const specs = lang === 'en' ? p.specsEn : p.specsZh;
-            const feature = lang === 'en' ? p.featEn : p.featZh;
-            const portsHtml = p.ports.map(port => `<span>${port}</span>`).join('');
-            const card = document.createElement('div');
-            card.className = 'product-card';
-            card.innerHTML = `
-                <div class="product-img"><img src="${p.img}" alt="${p.model}" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'130\' height=\'90\'%3E%3Crect width=\'130\' height=\'90\' fill=\'%2333495e\'/%3E%3Ctext x=\'20\' y=\'50\' fill=\'white\' font-size=\'12\'%3E${p.model}%3C/text%3E%3C/svg%3E';"></div>
-                <div class="product-info">
-                    <div class="product-title">${p.model}<span class="badge">${tagText}</span></div>
-                    <ul class="specs">${specs.map(s => `<li>${s}</li>`).join('')}</ul>
-                    <div class="interface">${portsHtml}</div>
-                    <div class="card-footer">
-                        <span>📦 ${feature}</span>
-                        <button class="quote-trigger" data-model="${p.model}">💬 Get Quote →</button>
+    <!-- 关于我们 -->
+    <div class="container" id="about">
+        <div class="about-wrapper">
+            <div class="about-flex">
+                <div class="about-text">
+                    <h3 data-translate="aboutTitle">About Vorveo</h3>
+                    <p data-translate="aboutP1">Vorveo (Shenzhen) Technology Co., Ltd., rooted in advanced digital AV expertise since 2013, specializes in DVB-T2/S2/C, Android STBs, and high-definition receivers. We operate 5 high-speed SMT lines, 10 automated assembly lines, and hold ISO9001 & ISO14001 certifications, with an annual capacity exceeding 6 million units.</p>
+                    <p data-translate="aboutP2">Our products are exported to Europe, Southeast Asia, South America, and Africa, providing OEM/ODM solutions for global operators. Every Vorveo set-top box undergoes rigorous RF and aging tests, delivering exceptional performance even in complex signal environments.</p>
+                    <div class="cert-list">
+                        <span class="cert-item">✔ ISO9001:2025</span>
+                        <span class="cert-item">✔ CE / RoHS</span>
+                        <span class="cert-item">✔ Patent Certifications</span>
                     </div>
                 </div>
-            `;
-            grid.appendChild(card);
-        });
-        // 绑定询价按钮
-        document.querySelectorAll('.quote-trigger').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const model = btn.getAttribute('data-model');
-                const msgField = document.querySelector('#quoteForm textarea[name="message"]');
-                if (msgField) {
-                    const prefix = currentLang === 'en' ? `I'm interested in ${model}: ` : `我对 ${model} 感兴趣: `;
-                    if (!msgField.value.includes(model)) msgField.value = prefix + msgField.value;
+                <div class="factory-card">
+                    <div style="font-size: 48px;">🏭</div>
+                    <p><strong data-translate="factoryTitle">Shenzhen Smart Base</strong><br><span data-translate="factoryDesc">Fully automated lines & dust-free workshops</span></p>
+                    <div style="margin-top: 12px; font-weight: 500;" data-translate="factoryCapacity">Daily capacity 20,000+ units</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 联系信息 -->
+    <div class="container" style="text-align: center; margin: 40px auto 60px;">
+        <h3 style="margin-bottom: 12px;" data-translate="contactTitle">Global Sales Network</h3>
+        <p style="margin-bottom: 24px;" data-translate="contactInfo">vorveo.com | info@vorveo.com</p>
+        <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+            <span class="trust-badge" data-translate="badge2">📦 OEM/ODM Ready</span>
+            <span class="trust-badge" data-translate="badge3">📄 SDK/APP Support</span>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container footer-grid">
+            <div><h4 data-translate="footerBrand">Vorveo Technology</h4><p data-translate="footerSlogan">Making digital TV experience simple</p><p>© 2025 Vorveo.com</p></div>
+            <div><h4 data-translate="footerQuick">Quick Links</h4><a href="#products" style="color:#94a3b8; text-decoration:none;" data-translate="footerProducts">Products</a><br><a href="#about" style="color:#94a3b8; text-decoration:none;" data-translate="footerAbout">About Us</a></div>
+            <div><h4 data-translate="footerLegal">Compliance</h4><p data-translate="footerCertText">All products meet international EMC & safety standards</p></div>
+        </div>
+        <div class="copyright" data-translate="copyright">vorveo.com — Vorveo Smart Terminals | Designed for performance</div>
+    </footer>
+
+    <!-- EmailJS 库移至 body 底部避免阻塞渲染 -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
+    </script>
+
+    <script>
+        (function() {
+            // ──────────────────────────────────────
+            // 产品数据
+            // ──────────────────────────────────────
+            const productsData = [
+                { model: "DVB-mini06", img: "img/mini06.webp", tagKey: "tagClassic",
+                    specsEn: ["DVB-T2/S2", "H.265", "Full Scan"], specsZh: ["DVB-T2/S2", "H.265硬解", "全频段扫描"],
+                    ports: ["RF IN", "DC-5V", "USB", "AV", "HDMI"], featEn: "90x60x25mm ultra-compact",
+                    featZh: "90x60x25mm 超迷你机身" },
+                { model: "HD-mini30", img: "img/HD-mini30.webp", tagKey: "tagHD",
+                    specsEn: ["HDMI+HD OUT", "4K Upscale", "Low Power"], specsZh: ["HDMI+HD OUT", "4K升频", "低功耗"],
+                    ports: ["RF IN", "DC-5V", "USB", "AV", "HD OUT"], featEn: "Dedicated HD output",
+                    featZh: "独立HD输出接口" },
+                { model: "HD-mini31", img: "img/HD-mini31.webp", tagKey: "tagDual",
+                    specsEn: ["Dual Tuner", "Low Threshold", "EPG"], specsZh: ["双Tuner接收", "超低门限", "EPG节目指南"],
+                    ports: ["RF IN*2", "USB", "HDMI", "AV", "DC 5V"], featEn: "Signal boost design",
+                    featZh: "信号增强设计" },
+                { model: "DVB-mini01", img: "img/mini01.webp", tagKey: "tagEssential",
+                    specsEn: ["MPEG-2/4", "Multi-Language", "Auto Scan"], specsZh: ["MPEG-2/4", "多国语言", "自动搜索"],
+                    ports: ["RF IN", "DC-5V", "USB", "AV", "HDMI"], featEn: "Best value entry",
+                    featZh: "入门性价比之王" },
+                { model: "DVB-mini02", img: "img/mini02.webp", tagKey: "tagUSB",
+                    specsEn: ["Multimedia Playback", "PVR Ready", "PAL/NTSC"],
+                    specsZh: ["多媒体播放", "录像功能", "PAL/NTSC"], ports: ["RF IN", "USB", "AV", "HDMI", "DC-5V"],
+                    featEn: "Supports DVB recording", featZh: "支持录制DVB节目" },
+                { model: "DVB-mini03", img: "img/mini03.webp", tagKey: "tagEco",
+                    specsEn: ["5V Low Power", "Fast Boot", "FTA"], specsZh: ["5V低功耗", "快速启动", "FTA接收"],
+                    ports: ["RF IN", "USB", "AV", "HDMI", "DC-5V"], featEn: "Standby <0.5W",
+                featZh: "绿色环保待机<0.5W" },
+                { model: "DVB-mini04", img: "img/mini04.webp", tagKey: "tagCooling",
+                    specsEn: ["Metal Shielding", "Anti-Interference", "1080P"],
+                    specsZh: ["全金属屏蔽", "抗干扰", "1080P输出"], ports: ["RF IN", "USB", "AV", "HDMI"],
+                    featEn: "Aluminum alloy case", featZh: "全铝合金机身" },
+                { model: "DVB-mini05", img: "img/mini05.webp", tagKey: "tagHotel",
+                    specsEn: ["RS232(Opt)", "Cloning", "Welcome Msg"], specsZh: ["RS232串口(可选)", "克隆功能", "欢迎信息"],
+                    ports: ["RF IN", "USB", "AV", "HDMI", "DC-5V"], featEn: "Hotel mode ready",
+                    featZh: "支持酒店工程模式" }
+            ];
+
+            const translations = {
+                en: {
+                    subBrand: "Vorveo · Smart Vision",
+                    navProducts: "Products",
+                    navWhy: "Why Vorveo",
+                    navAbout: "About",
+                    quoteBtn: "Get a Free Quote",
+                    heroTitle: "Crystal Clear World<br>From Vorveo",
+                    heroDesc: "Professional DVB Receiver Manufacturer | 11 Years of Expertise | Serving 40+ Countries",
+                    statAnnual: "Annual Capacity",
+                    statPatents: "R&D Patents",
+                    statCert: "Certified",
+                    heroBtnExplore: "Explore Products",
+                    heroBtnStrength: "Request Quote",
+                    productsTitle: "📺 Bestselling Set-Top Box Series",
+                    productsSub: "Compact & Full Connectivity · Reliable Signal Reception",
+                    whyTitle: "Why Vorveo",
+                    why1Title: "Own Factory",
+                    why1Desc: "5 SMT lines, 10 assembly lines, daily 20k+ units",
+                    why2Title: "Strict QC",
+                    why2Desc: "Aging test & RF calibration on every unit",
+                    why3Title: "OEM/ODM Expert",
+                    why3Desc: "Firmware customization, logo, packaging",
+                    why4Title: "Global Support",
+                    why4Desc: "Warehouses in EU/SEA, fast shipping",
+                    aboutTitle: "About Vorveo",
+                    aboutP1: "Vorveo (Shenzhen) Technology Co., Ltd., rooted in advanced digital AV expertise since 2013, specializes in DVB-T2/S2/C, Android STBs, and high-definition receivers. We operate 5 high-speed SMT lines, 10 automated assembly lines, and hold ISO9001 & ISO14001 certifications, with an annual capacity exceeding 6 million units.",
+                    aboutP2: "Our products are exported to Europe, Southeast Asia, South America, and Africa, providing OEM/ODM solutions for global operators. Every Vorveo set-top box undergoes rigorous RF and aging tests, delivering exceptional performance even in complex signal environments.",
+                    factoryTitle: "Shenzhen Smart Base",
+                    factoryDesc: "Fully automated lines & dust-free workshops",
+                    factoryCapacity: "Daily capacity 20,000+ units",
+                    contactTitle: "Global Sales Network",
+                    contactInfo: "vorveo.com | info@vorveo.com",
+                    badge2: "📦 OEM/ODM Ready",
+                    badge3: "📄 SDK/APP Support",
+                    footerBrand: "Vorveo Technology",
+                    footerSlogan: "Making digital TV experience simple",
+                    footerQuick: "Quick Links",
+                    footerAbout: "About Us",
+                    footerLegal: "Compliance",
+                    footerCertText: "All products meet international EMC & safety standards",
+                    copyright: "vorveo.com — Vorveo Smart Terminals",
+                    formTitle: "Request a Free Quote",
+                    nameLabel: "Full Name *",
+                    emailLabel: "Email *",
+                    companyLabel: "Company",
+                    messageLabel: "Message / Inquiry *",
+                    submitBtn: "Send Message",
+                    tags: { tagClassic: "Classic", tagHD: "HD Output", tagDual: "Dual Tuner",
+                        tagEssential: "Essential", tagUSB: "PVR Ready", tagEco: "Eco", tagCooling: "Alloy",
+                        tagHotel: "Hotel" }
+                },
+                zh: {
+                    subBrand: "沃维欧 · 智享视界",
+                    navProducts: "产品中心",
+                    navWhy: "优势",
+                    navAbout: "关于我们",
+                    quoteBtn: "获取免费报价",
+                    heroTitle: "高清视界<br>源自沃维欧",
+                    heroDesc: "专业 DVB 机顶盒制造商 | 11年技术沉淀 | 服务全球40+国家",
+                    statAnnual: "年产能",
+                    statPatents: "研发专利",
+                    statCert: "国际认证",
+                    heroBtnExplore: "探索产品",
+                    heroBtnStrength: "立即询价",
+                    productsTitle: "📺 热销机顶盒系列",
+                    productsSub: "精致小巧 · 全接口支持 · 稳定信号接收，适合酒店/家庭/商业应用",
+                    whyTitle: "为什么选择沃维欧",
+                    why1Title: "自有工厂",
+                    why1Desc: "5条SMT线，10条组装线，日产2万台",
+                    why2Title: "严苛质检",
+                    why2Desc: "每台设备老化测试与射频校准",
+                    why3Title: "OEM/ODM专家",
+                    why3Desc: "固件定制、LOGO、包装",
+                    why4Title: "全球支持",
+                    why4Desc: "欧/东南亚仓库，快速发货",
+                    aboutTitle: "关于沃维欧 · Vorveo",
+                    aboutP1: "沃维欧（Vorveo）源于深圳，依托母公司近十余年数字视听技术积累，专注于DVB-T2/S2/C、Android智能机顶盒及高清接收设备的研发与制造。我们拥有5条高速SMT生产线、10条自动化组装线，通过ISO9001及ISO14001体系认证，年产能力超600万台。",
+                    aboutP2: "产品远销欧洲、东南亚、南美及非洲，为全球运营商及品牌客户提供OEM/ODM解决方案。每一台Vorveo机顶盒都经过严格射频测试与老化实验，确保在复杂信号环境下依然拥有卓越性能。",
+                    factoryTitle: "深圳智能制造基地",
+                    factoryDesc: "全自动化产线 & 百万级无尘车间",
+                    factoryCapacity: "日均产能 20,000+ 台",
+                    contactTitle: "全球销售网络",
+                    contactInfo: "vorveo.com | info@vorveo.com",
+                    badge2: "📦 支持OEM定制",
+                    badge3: "📄 提供SDK/APP开发",
+                    footerBrand: "沃维欧科技",
+                    footerSlogan: "让数字电视体验更简单",
+                    footerQuick: "快速链接",
+                    footerAbout: "企业介绍",
+                    footerLegal: "合规声明",
+                    footerCertText: "本网站产品均已通过国际EMC与安全认证",
+                    copyright: "vorveo.com — 沃维欧智慧终端",
+                    formTitle: "免费获取报价",
+                    nameLabel: "全名 *",
+                    emailLabel: "电子邮箱 *",
+                    companyLabel: "公司名称",
+                    messageLabel: "留言/询盘内容 *",
+                    submitBtn: "发送询盘",
+                    tags: { tagClassic: "经典畅销", tagHD: "升级HD输出", tagDual: "双天线版", tagEssential: "基础全能",
+                        tagUSB: "USB多媒体", tagEco: "节能设计", tagCooling: "强化散热", tagHotel: "酒店定制" }
                 }
-                modal.style.display = 'flex';
+            };
+
+            let currentLang = 'en';
+
+            // ──────────────────────────────────────
+            // DOM 缓存
+            // ──────────────────────────────────────
+            const productGrid = document.getElementById('product-list');
+            const modal = document.getElementById('quoteModal');
+            const quoteForm = document.getElementById('quoteForm');
+            const formStatus = document.getElementById('formStatus');
+            const langToggleBtn = document.getElementById('langToggle');
+            const msgTextarea = quoteForm.querySelector('textarea[name="message"]');
+            const submitBtn = quoteForm.querySelector('.submit-btn');
+            const modalTitle = document.getElementById('modalTitle');
+
+            // ──────────────────────────────────────
+            // 渲染产品（使用 DocumentFragment 减少回流）
+            // ──────────────────────────────────────
+            function renderProducts(lang) {
+                if (!productGrid) return;
+                const t = translations[lang];
+                const tagMap = t.tags;
+                const fragment = document.createDocumentFragment();
+
+                productsData.forEach(p => {
+                    const tagText = tagMap[p.tagKey];
+                    const specs = lang === 'en' ? p.specsEn : p.specsZh;
+                    const feature = lang === 'en' ? p.featEn : p.featZh;
+                    const portsHtml = p.ports.map(port => `<span>${port}</span>`).join('');
+
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.setAttribute('data-model', p.model);
+                    card.innerHTML = `
+                        <div class="product-img">
+                            <img src="${p.img}" alt="${p.model} DVB Receiver" 
+                                 loading="lazy" decoding="async" width="180" height="120"
+                                 onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27130%27 height=%2790%27%3E%3Crect width=%27130%27 height=%2790%27 fill=%27%2333495e%27 rx=%278%27/%3E%3Ctext x=%2720%27 y=%2750%27 fill=%27white%27 font-size=%2712%27%3E${p.model}%3C/text%3E%3C/svg%3E';">
+                        </div>
+                        <div class="product-info">
+                            <div class="product-title">${p.model}<span class="badge">${tagText}</span></div>
+                            <ul class="specs">${specs.map(s => `<li>${s}</li>`).join('')}</ul>
+                            <div class="interface">${portsHtml}</div>
+                            <div class="card-footer">
+                                <span>📦 ${feature}</span>
+                                <button class="quote-trigger" data-model="${p.model}">💬 Get Quote →</button>
+                            </div>
+                        </div>
+                    `;
+                    fragment.appendChild(card);
+                });
+
+                // 清空并一次性插入
+                productGrid.innerHTML = '';
+                productGrid.appendChild(fragment);
+            }
+
+            // ──────────────────────────────────────
+            // 事件委托：产品卡片中的询价按钮
+            // ──────────────────────────────────────
+            if (productGrid) {
+                productGrid.addEventListener('click', function(e) {
+                    const trigger = e.target.closest('.quote-trigger');
+                    if (!trigger) return;
+                    e.preventDefault();
+                    const model = trigger.getAttribute('data-model');
+                    if (msgTextarea && model) {
+                        const prefix = currentLang === 'en' ?
+                            `I'm interested in ${model}: ` :
+                            `我对 ${model} 感兴趣: `;
+                        if (!msgTextarea.value.includes(model)) {
+                            msgTextarea.value = prefix + msgTextarea.value;
+                        }
+                    }
+                    modal.style.display = 'flex';
+                });
+            }
+
+            // ──────────────────────────────────────
+            // 语言切换
+            // ──────────────────────────────────────
+            function updateLanguage(lang) {
+                currentLang = lang;
+                const t = translations[lang];
+                document.querySelectorAll('[data-translate]').forEach(el => {
+                    const key = el.getAttribute('data-translate');
+                    if (t[key]) el.innerHTML = t[key];
+                });
+                renderProducts(lang);
+                langToggleBtn.innerText = lang === 'en' ? '中文' : 'English';
+            }
+
+            langToggleBtn.addEventListener('click', function() {
+                updateLanguage(currentLang === 'en' ? 'zh' : 'en');
             });
-        });
-    }
 
-    // Modal and EmailJS
-    const modal = document.getElementById('quoteModal');
-    const openBtn = document.getElementById('quoteModalBtn');
-    const heroQuote = document.getElementById('heroQuoteBtn');
-    const closeSpan = document.querySelector('.close-modal');
-    openBtn.onclick = () => modal.style.display = 'flex';
-    if(heroQuote) heroQuote.onclick = () => modal.style.display = 'flex';
-    closeSpan.onclick = () => modal.style.display = 'none';
-    window.onclick = (e) => { if(e.target === modal) modal.style.display = 'none'; };
+            // ──────────────────────────────────────
+            // 模态框控制
+            // ──────────────────────────────────────
+            const openModal = function() { modal.style.display = 'flex'; };
+            const closeModal = function() {
+                modal.style.display = 'none';
+                formStatus.innerHTML = '';
+            };
 
-    emailjs.init('Fuf4_rjkmoRIAXI1J');
-    const form = document.getElementById('quoteForm');
-    const formStatus = document.getElementById('formStatus');
+            document.getElementById('quoteModalBtn').addEventListener('click', openModal);
+            const heroQuoteBtn = document.getElementById('heroQuoteBtn');
+            if (heroQuoteBtn) heroQuoteBtn.addEventListener('click', openModal);
+            document.querySelector('.close-modal').addEventListener('click', closeModal);
+            window.addEventListener('click', function(e) {
+                if (e.target === modal) closeModal();
+            });
+            // ESC 关闭模态框
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
+            });
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = form.querySelector('.submit-btn');
-        btn.disabled = true;
-        const originalText = btn.innerText;
-        btn.innerText = currentLang === 'en' ? 'Sending...' : '发送中...';
-        formStatus.innerHTML = '<span style="color:#2563eb;">⏳ Sending...</span>';
-        try {
-            const response = await emailjs.send(
-                'service_nx0wnew',
-                'template_umxxtqg',
-                {
-                    user_name: form.user_name.value,
-                    user_email: form.user_email.value,
-                    company: form.company.value,
-                    message: form.message.value,
-                    reply_to: form.user_email.value,
-                    current_time: new Date().toLocaleString()
+            // ──────────────────────────────────────
+            // EmailJS 初始化 & 表单提交
+            // ──────────────────────────────────────
+            if (typeof emailjs !== 'undefined') {
+                emailjs.init('Fuf4_rjkmoRIAXI1J');
+            }
+
+            quoteForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                if (typeof emailjs === 'undefined') {
+                    const errMsg = currentLang === 'en' ?
+                        '❌ Service unavailable. Please email info@vorveo.com directly.' :
+                        '❌ 服务暂不可用，请直接发送邮件至 info@vorveo.com';
+                    formStatus.innerHTML =
+                        `<span style="color:#dc2626;">${errMsg}</span>`;
+                    return;
                 }
-            );
-            if(response.status === 200) {
-                const successMsg = currentLang === 'en' ? '✓ Message sent! We’ll reply soon.' : '✓ 消息发送成功！我们会尽快回复您。';
-                formStatus.innerHTML = `<span style="color:#16a34a;">${successMsg}</span>`;
-                form.reset();
-                setTimeout(() => { modal.style.display = 'none'; formStatus.innerHTML = ''; }, 2500);
-            } else throw new Error();
-        } catch(err) {
-            const errMsg = currentLang === 'en' ? '❌ Error, please email info@vorveo.com directly.' : '❌ 发送失败，请直接发送邮件至 info@vorveo.com';
-            formStatus.innerHTML = `<span style="color:#dc2626;">${errMsg}</span>`;
-        } finally {
-            btn.disabled = false;
-            btn.innerText = originalText;
-        }
-    });
 
-    document.getElementById('langToggle').addEventListener('click', () => {
-        updateLanguage(currentLang === 'en' ? 'zh' : 'en');
-    });
-    renderProducts('en');
-    updateLanguage('en');
-</script>
+                submitBtn.disabled = true;
+                const originalText = submitBtn.innerText;
+                submitBtn.innerText = currentLang === 'en' ? 'Sending...' : '发送中...';
+                formStatus.innerHTML =
+                '<span style="color:#2563eb;">⏳ Sending...</span>';
+
+                try {
+                    const response = await emailjs.send(
+                        'service_nx0wnew',
+                        'template_umxxtqg',
+                        {
+                            user_name: quoteForm.user_name.value,
+                            user_email: quoteForm.user_email.value,
+                            company: quoteForm.company.value,
+                            message: quoteForm.message.value,
+                            reply_to: quoteForm.user_email.value,
+                            current_time: new Date().toLocaleString()
+                        }
+                    );
+                    if (response.status === 200) {
+                        const successMsg = currentLang === 'en' ?
+                            '✓ Message sent! We\'ll reply soon.' :
+                            '✓ 消息发送成功！我们会尽快回复您。';
+                        formStatus.innerHTML =
+                            `<span style="color:#16a34a;">${successMsg}</span>`;
+                        quoteForm.reset();
+                        setTimeout(function() {
+                            closeModal();
+                        }, 2500);
+                    } else {
+                        throw new Error('Unexpected status');
+                    }
+                } catch (err) {
+                    const errMsg = currentLang === 'en' ?
+                        '❌ Error, please email info@vorveo.com directly.' :
+                        '❌ 发送失败，请直接发送邮件至 info@vorveo.com';
+                    formStatus.innerHTML =
+                        `<span style="color:#dc2626;">${errMsg}</span>`;
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = originalText;
+                }
+            });
+
+            // ──────────────────────────────────────
+            // 初始渲染
+            // ──────────────────────────────────────
+            renderProducts('en');
+            updateLanguage('en');
+        })();
+    </script>
 </body>
 </html>
